@@ -39,6 +39,16 @@ const TableRates = () => {
         return <div className="error">Something went wrong...</div>;
     }
 
+    const maxUSD = Math.max(...ratesUSD);
+    const minUSD = Math.min(...ratesUSD);
+
+    const maxEUR = Math.max(...ratesEUR);
+    const minEUR = Math.min(...ratesEUR);
+
+    const maxRUR = Math.max(...ratesRUR);
+    const minRUR = Math.min(...ratesRUR);
+
+
     return (
         <table className="table">
             {visibleRates.length > 0 ? <thead key={Math.floor(Math.random()*10000)}>
@@ -61,17 +71,17 @@ const TableRates = () => {
                         {visibleRates.length > 0 && <td>{date.slice(0, 10)}</td>}
 
                         {ratesUSD.length > 0 && visibleRates.includes('USD') &&
-                        <td className={ratesUSD[index] == Math.max(...ratesUSD) && 'max'
-                                        || ratesUSD[index] == Math.min(...ratesUSD) && 'min' || null }
+                        <td className={ratesUSD[index] == maxUSD && 'max'
+                                        || ratesUSD[index] == minUSD && 'min' || null }
                         >{ratesUSD[index]}</td>}
 
                         {ratesEUR.length > 0 && visibleRates.includes('EUR') &&
-                        <td className={ratesEUR[index] == Math.max(...ratesEUR) && 'max'
-                        || ratesEUR[index] == Math.min(...ratesEUR) && 'min' || null }>{ratesEUR[index]}</td>}
+                        <td className={ratesEUR[index] == maxEUR && 'max'
+                        || ratesEUR[index] == minEUR && 'min' || null }>{ratesEUR[index]}</td>}
 
                         {ratesRUR.length > 0 && visibleRates.includes('RUR') &&
-                        <td className={ratesRUR[index] == Math.max(...ratesRUR) && 'max'
-                        || ratesRUR[index] == Math.min(...ratesRUR) && 'min' || null }>{ratesRUR[index]}</td>}
+                        <td className={ratesRUR[index] == maxRUR && 'max'
+                        || ratesRUR[index] == minRUR && 'min' || null }>{ratesRUR[index]}</td>}
                     </tr>
                 })
             }
