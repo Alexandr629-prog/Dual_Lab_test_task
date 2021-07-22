@@ -1,0 +1,87 @@
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import {getRates} from "../../actions/getRates";
+
+import LoadingIndicator from "../loading-indicator/loading-indicator";
+
+import './table-rates.less'
+
+
+const TableRates = () => {
+    const dispatch = useDispatch();
+    const usdId = useSelector(state => state.usdId);
+    const eurId = useSelector(state => state.eurId);
+    const rurId = useSelector(state => state.rurId);
+    const dateStart = useSelector(state => state.dateStart);
+    const dateEnd = useSelector(state => state.dateEnd);
+
+    const ratesUSD = useSelector(state => state.ratesUSD);
+    const ratesEUR = useSelector(state => state.ratesEUR);
+    const ratesRUR = useSelector(state => state.ratesRUR);
+
+    const loading = useSelector(state => state.loading);
+    const error = useSelector(state => state.error);
+    const visibleRates = useSelector(state => state.visibleRates);
+    const dates = useSelector(state => state.dates);
+
+
+    useEffect(() => {
+        dispatch(getRates(usdId, dateStart, dateEnd));
+        dispatch(getRates(eurId, dateStart, dateEnd));
+        dispatch(getRates(rurId, dateStart, dateEnd));
+    }, [dateEnd, dateStart])
+
+
+    if (loading) {
+        return <LoadingIndicator/>;
+    }
+    if (error) {
+        return <div className="error">Something went wrong...</div>;
+    }
+
+    return (
+        <table className="table">
+            {visibleRates.length > 0 ? <thead key={Math.floor(Math.random()*10000)}>
+                <tr key={Math.floor(Math.random()*10000)}>
+                    <th scope="col">Date</th>
+                    {
+                        visibleRates.map((rate) => {
+                            return <th key={Math.floor(Math.random()*10000)} scope="col">{rate}</th>
+                        })
+                    }
+                </tr>
+                </thead> :
+                <thead><tr key={Math.floor(Math.random()*10000)}  ><td className="currency-not">this currency is not</td></tr></thead>
+            }
+            <tbody key={Math.floor(Math.random()*10000)}>
+
+            {
+                dates.map((date, index) => {
+                    return <tr key={Math.floor(Math.random()*10000)} scope="row">
+                        {visibleRates.length > 0 && <td>{date.slice(0, 10)}</td>}
+
+                        {ratesUSD.length > 0 && visibleRates.includes('USD') &&
+                        <td className={ratesUSD[index] == Math.max(...ratesUSD) && 'max'
+                                        || ratesUSD[index] == Math.min(...ratesUSD) && 'min' || null }
+                        >{ratesUSD[index]}</td>}
+
+                        {ratesEUR.length > 0 && visibleRates.includes('EUR') &&
+                        <td className={ratesEUR[index] == Math.max(...ratesEUR) && 'max'
+                        || ratesEUR[index] == Math.min(...ratesEUR) && 'min' || null }>{ratesEUR[index]}</td>}
+
+                        {ratesRUR.length > 0 && visibleRates.includes('RUR') &&
+                        <td className={ratesRUR[index] == Math.max(...ratesRUR) && 'max'
+                        || ratesRUR[index] == Math.min(...ratesRUR) && 'min' || null }>{ratesRUR[index]}</td>}
+                    </tr>
+                })
+            }
+
+            </tbody>
+        </table>
+
+    )
+
+
+};
+
+export default TableRates;
